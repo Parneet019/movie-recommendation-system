@@ -3,9 +3,17 @@ import ast
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-movies = pd.read_csv("../dataset/tmdb_5000_movies.csv")
+import os
 
-credits = pd.read_csv("../dataset/tmdb_5000_credits.csv")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+movies = pd.read_csv(
+    os.path.join(BASE_DIR, "dataset", "tmdb_5000_movies.csv")
+)
+
+credits = pd.read_csv(
+    os.path.join(BASE_DIR, "dataset", "tmdb_5000_credits.csv")
+)
 
 print("Movies dataset:", movies.shape)
 print("Credits dataset:", credits.shape)
