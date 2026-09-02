@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from movie_recommender import recommend
+from portfolio.movie_recommender import recommend
 
 app = Flask(__name__)
 
