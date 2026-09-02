@@ -1,0 +1,298 @@
+<html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Recommendations | Movie Finder</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+    font-family: Arial, sans-serif;
+    color: white;
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 50% -20%,
+            rgba(229, 9, 20, 0.18),
+            transparent 45%
+        ),
+        radial-gradient(
+            circle at 5% 90%,
+            rgba(120, 0, 0, 0.10),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 95% 70%,
+            rgba(80, 0, 0, 0.08),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #08080b,
+            #0d0b10 45%,
+            #050507
+        );
+
+    background-attachment: fixed;
+}
+
+        header {
+            text-align: center;
+            padding: 55px 20px 35px;
+        }
+
+        header h1 {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        header p {
+            color: #aaa;
+            font-size: 17px;
+        }
+
+        .selected-movie {
+            color: #e50914;
+            font-weight: bold;
+        }
+
+        .movie-grid {
+            width: 90%;
+            max-width: 1200px;
+            margin: 25px auto 50px;
+
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+
+            gap: 28px;
+        }
+
+        .movie-card {
+            background: #17171c;
+            border-radius: 16px;
+            overflow: hidden;
+
+            border: 1px solid #29292f;
+
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px);
+
+            border-color: #e50914;
+
+            box-shadow: 0 15px 40px rgba(229, 9, 20, 0.2);
+        }
+
+        .movie-placeholder {
+            width: 100%;
+            height: 310px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 55px;
+
+            background: linear-gradient(
+                135deg,
+                #1f1f27,
+                #111116
+            );
+        }
+
+        .movie-info {
+            padding: 18px 15px 20px;
+            text-align: center;
+        }
+
+        .movie-info h2 {
+            font-size: 19px;
+            line-height: 1.4;
+        }
+
+        .back-button {
+            display: block;
+            width: fit-content;
+
+            margin: 0 auto 55px;
+
+            padding: 13px 25px;
+
+            background: #e50914;
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            transition:
+                background 0.3s ease,
+                transform 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #b20710;
+            transform: translateY(-2px);
+        }
+
+        .not-found {
+            width: 90%;
+            max-width: 600px;
+
+            margin: 20px auto 50px;
+
+            padding: 50px 30px;
+
+            text-align: center;
+
+            background: #17171c;
+
+            border: 1px solid #29292f;
+            border-radius: 16px;
+
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .not-found-icon {
+            font-size: 55px;
+            margin-bottom: 20px;
+        }
+
+        .not-found h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .not-found p {
+            color: #aaa;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .not-found strong {
+            color: #e50914;
+        }
+
+        .try-again-text {
+            margin-top: 8px;
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                padding-top: 40px;
+            }
+
+            header h1 {
+                font-size: 30px;
+            }
+
+            .movie-grid {
+                width: 88%;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 18px;
+            }
+
+            .movie-placeholder {
+                height: 240px;
+            }
+
+            .movie-info h2 {
+                font-size: 16px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+
+        <h1>🎬 Recommended Movies</h1>
+
+        <p>
+            Movies similar to
+            <span class="selected-movie">{{ movie }}</span>
+        </p>
+
+    </header>
+
+
+    {% if not_found %}
+
+        <div class="not-found">
+
+            <div class="not-found-icon">
+                🔎
+            </div>
+
+            <h2>Movie Not Found</h2>
+
+            <p>
+                We couldn't find
+                <strong>"{{ movie }}"</strong>
+                in our movie database.
+            </p>
+
+            <p class="try-again-text">
+                Please check the spelling and try again.
+            </p>
+
+            <a href="/" class="back-button">
+                ← Search Again
+            </a>
+
+        </div>
+
+    {% else %}
+
+        <div class="movie-grid">
+
+            {% for recommendation in recommendations %}
+
+                <div class="movie-card">
+
+                    <div class="movie-placeholder">
+                        🎬
+                    </div>
+
+                    <div class="movie-info">
+                        <h2>{{ recommendation.title }}</h2>
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+        <a href="/" class="back-button">
+            ← Search Another Movie
+        </a>
+
+    {% endif %}
+
+</body>
+
+</html>
+
